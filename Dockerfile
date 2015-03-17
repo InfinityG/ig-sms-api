@@ -24,26 +24,21 @@ RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 #### Clone Github repos ####
 
 RUN mkdir -p home
-RUN git clone git@github.com:InfinityG/ig-gems.git /home/ig-gems
+RUN git clone git@github.com:InfinityG/ig-sms-api.git /home/ig-sms-api
 RUN \
-  cd /home/ig-gems/ig-crypto-utils && \
-  gem build /home/ig-gems/ig-crypto-utils/ig-crypto-utils.gemspec && \
-  gem install /home/ig-gems/ig-crypto-utils/ig-crypto-utils-0.0.1.gem
-RUN git clone git@github.com:InfinityG/ig-identity.git /home/ig-identity
-RUN \
-  cd /home/ig-identity && \
+  cd /home/ig-sms-api && \
   bundler install --without test development
 
-WORKDIR /home/ig-identity
+WORKDIR /home/ig-sms-api
 
-EXPOSE 9002
+EXPOSE 9004
 
 CMD rackup
 
 
-# To build: sudo docker build -t infinityg/ig-identity:v1 .
-# To run: sudo docker run -it --rm infinityg/ig-identity:v1
-#   - with port: -p 9002:9002
+# To build: sudo docker build -t infinityg/ig-sms-api:v1 .
+# To run: sudo docker run -it --rm infinityg/ig-sms-api:v1
+#   - with port: -p 9004:9004
 # Inspect: sudo docker inspect [container_id]
 # Delete all containers: sudo docker rm $(docker ps -a -q)
 # Delete all images: sudo docker rmi $(docker images -q)

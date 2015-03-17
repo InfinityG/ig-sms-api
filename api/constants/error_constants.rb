@@ -2,17 +2,15 @@ module ErrorConstants
 
   module MessageErrors
     MESSAGE_DELIVERY_ERROR = 'An error was experienced while delivering your message'
+    MESSAGE_ALREADY_HANDLED_ERROR = 'The reply message was already handled!'
+    MESSAGE_NOT_FOUND_ERROR = 'A matching message could not be found!'
   end
 
   module ValidationErrors
-    INVALID_FIRST_NAME = 'Invalid first name'
-    INVALID_LAST_NAME = 'Invalid last name'
-    INVALID_USERNAME = 'Invalid username'
-    INVALID_PASSWORD = 'Invalid password. Minimum 8 characters length, with at least 1 upper case, 1 numeric and 1 special character'
-    INVALID_PUBLIC_KEY = 'Invalid public key'
-    INVALID_DOMAIN = 'Invalid domain'
-    NO_CHALLENGE_FOUND = 'No challenge found!'
-    INVALID_CHALLENGE_DATA = 'Invalid challenge data'
-    INVALID_CHALLENGE_SIGNATURE = 'Invalid challenge signature'
+    INVALID_PHONE_NUMBER = 'Invalid phone number'
+    INVALID_MESSAGE = 'Invalid message'
+    INVALID_WEBHOOK_URI = 'Invalid webhook uri'
+    INVALID_WEBHOOK_AUTH_HEADER = 'Invalid webhook auth header'
+    INVALID_WEBHOOK_BODY = 'Invalid webhook body'
   end
 end

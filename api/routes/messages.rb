@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require './api/services/message_service'
+require './api/validators/message_validator'
 require './api/utils/rest_util'
 require './api/errors/sms_error'
 require 'json'
@@ -12,17 +13,30 @@ module Sinatra
         data = JSON.parse(request.body.read, :symbolize_names => true)
 
         begin
-          # payload data: {:number => "0822323434", :message => "Congratulations!...",
-          #   :webhook => {"uri"":"http://identity.infinity-g.com/confirmations", "auth_header":"dsdsdfsdfds", "body":"sdfsdf"}}
+          MessageValidator.new.validate_outbound_message data
+        rescue ValidationError => e
+          status 400  # bad request
+          e.message.to_json
+        end
 
+        begin
           MessageService.new.create data
-
           status 200
         rescue SmsError => e
           status 500
           e.message.to_json
         end
 
+      end
+
+      app.get '/messages' do
+        begin
+          result = MessageService.new.get_all
+          status 200
+          result.to_json
+        rescue
+          status 500
+        end
       end
 
       app.get '/messages/inbound' do

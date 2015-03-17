@@ -9,7 +9,7 @@ end
 
 And(/^no embedded short hash$/) do
   @message = 'Test message'
-  end
+end
 
 And(/^an embedded short hash and reply number$/) do
   @message = 'Test message: send %{SHORT_HASH} to %{REPLY_NUMBER}'
@@ -17,15 +17,16 @@ end
 
 And(/^no reply webhook$/) do
   @webhook = nil
-  end
+end
 
 And(/^a reply webhook$/) do
-  @webhook = {:uri => 'http://identity.infinity-g.com/confirmations', :auth_header => 'gouygiuyiu', :body => '{"number":"21424124"}'}
+  @webhook = {:uri => 'http://identity.infinity-g.com/confirmations', :auth_header => 'gouygiuyiu', :body => {:number => '21424124'}}
 end
 
 When(/^I send a message request to the SMS API/) do
-  # payload data: {:number => "0822323434", :message => "Congratulations!...",
-  #   :webhook => {"uri"":"http://identity.infinity-g.com/confirmations", "auth_header":"", "body":"sdfsdf"}}
+  # eg: {:number => '0822323434',
+  #   :message => 'Congratulations, you have now been registered! Reply %{SHORT_HASH} to %{REPLY_NUMBER} to confirm.',
+  #   :webhook => {'uri':'http://identity.infinity-g.com/confirmations', 'auth_header':'13221442', 'body':'{"number":"0822323434"}'}}
 
   payload = {:number => @mobile_number, :message => @message, :webhook => @webhook}.to_json
   rest_util = RestUtil.new
