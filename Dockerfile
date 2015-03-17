@@ -42,9 +42,10 @@ EXPOSE 9004
 CMD mongod --fork --logpath /var/log/mongodb.log && rackup -E test
 
 
-# To build: sudo docker build -t infinityg/ig-sms-api:v1 .
-# To run: sudo docker run -it --rm infinityg/ig-sms-api:v1
-# To run with port: To run: sudo docker run -p 9004:9004 -it --rm infinityg/ig-sms-api:v1
+# Build: sudo docker build -t infinityg/ig-sms-api:v1 .
+# Run: sudo docker run -it --rm infinityg/ig-sms-api:v1
+# Run (with port binding): sudo docker run -p 9004:9004 -it --rm infinityg/ig-sms-api:v1
+# Run (with port binding to host internal interface): sudo docker run -it -p 127.0.0.1:9004:9004 --rm infinityg/ig-identity:v1
 # Inspect: sudo docker inspect [container_id]
 # Delete all containers: sudo docker rm $(docker ps -a -q)
 # Delete all images: sudo docker rmi $(docker images -q)
