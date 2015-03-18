@@ -43,8 +43,8 @@ class MessageService
 
   end
 
-  def update(short_hash, message_id)
-    matched_message = @message_repository.get_message_by_short_hash short_hash
+  def update(short_hash, sender_number, message_id)
+    matched_message = @message_repository.get_message_by_short_hash_and_number short_hash, sender_number
 
     raise SmsError, MESSAGE_NOT_FOUND_ERROR if matched_message == nil
     raise SmsError, MESSAGE_ALREADY_HANDLED_ERROR if matched_message.incoming_message_id.to_s != ''

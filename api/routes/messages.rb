@@ -43,15 +43,20 @@ module Sinatra
         content_type :json
 
         begin
-          # eg:/messages/inbound?msisdn=19150000001&to=12108054321
-          # &messageId=000000FFFB0356D1&text=This+is+an+inbound+message
-          # &type=text&message-timestamp=2012-08-19+20%3A38%3A23
-          sender_id = params['msisdn'].to_i
+          # eg:/messages/inbound?msisdn=27827255159
+          # &to=27877460911
+          # &messageId=0200000057C3CD30
+          # &text=yK2ba
+          # &type=text
+          # &keyword=YK2BA
+          # &message-timestamp=2015-03-18+10%3A59%3A45
+
+          sender_number = params['msisdn'].to_i
           message_id = params['messageId']
-          text = params['text']
+          short_hash = params['text']
           timestamp = params['message-timestamp']
 
-          MessageService.new.update text, message_id
+          MessageService.new.update sender_number, short_hash, message_id
 
           status 200
         rescue SmsError => e
