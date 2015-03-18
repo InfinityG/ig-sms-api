@@ -40,7 +40,11 @@ module Sinatra
       end
 
       app.get '/messages/inbound' do
-        content_type :json
+        status 200
+      end
+
+      app.post '/messages/inbound' do
+        data = JSON.parse(request.body.read)
 
         begin
           # eg:/messages/inbound?msisdn=27827255159
@@ -51,7 +55,7 @@ module Sinatra
           # &keyword=YK2BA
           # &message-timestamp=2015-03-18+10%3A59%3A45
 
-          sender_number = params['msisdn'].to_i
+          sender_number = data['msisdn'].to_i
           message_id = params['messageId']
           short_hash = params['text']
           timestamp = params['message-timestamp']
@@ -60,7 +64,7 @@ module Sinatra
 
           status 200
         rescue SmsError => e
-          status 200  # this should be 500 but the SMS provider needs a 200
+          status 500  # this should be 500 but the SMS provider needs a 200
           e.message.to_json
         end
 
