@@ -8,6 +8,9 @@ require './api/errors/sms_error'
 require './api/constants/error_constants'
 
 class MessageService
+
+  include ErrorConstants::MessageErrors
+
   def initialize(message_repository = MessageRepository, hash_service = HashService,
                  config_service = ConfigurationService, rest_util = RestUtil)
     @message_repository = message_repository.new
