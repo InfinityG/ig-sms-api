@@ -36,7 +36,8 @@ class MessageRepository
     end
 
   def get_messages_with_pending_webhooks
-    SmartSms::Models::Message.where('webhook.status' => 'pending')
+    # https://gist.github.com/kinopyo/1547098
+    SmartSms::Models::Message.where(:incoming_message_id.ne => nil,  'webhook.status' => 'pending').all
   end
 
 end

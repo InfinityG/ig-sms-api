@@ -68,8 +68,12 @@ class MessageService
   def send_to_sms_gateway(message, number)
     config = @config_service.get_config
 
-    payload = {:api_key => config[:sms_gateway_api_key], :api_secret => config[:sms_gateway_api_secret],
-               :from => 'ig-sms-api', :to => number, :text => message}.to_json
+    payload = {
+        :api_key => config[:sms_gateway_api_key],
+        :api_secret => config[:sms_gateway_api_secret],
+        :from => 'ig-sms-api',
+        :to => number, :text => message
+    }.to_json
 
     # See https://docs.nexmo.com/index.php/sms-api/send-message for sample response
     result = @rest_util.execute_post config[:sms_gateway_api_uri], '', payload
