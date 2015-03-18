@@ -56,7 +56,8 @@ module Sinatra
           short_hash = params['text']
           timestamp = params['message-timestamp']
 
-          MessageService.new.update sender_number, short_hash, message_id
+          result = MessageService.new.update sender_number, short_hash, message_id
+          puts result
 
           status 200
         rescue SmsError => e
