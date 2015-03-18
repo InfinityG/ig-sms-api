@@ -39,33 +39,29 @@ module Sinatra
         end
       end
 
-      # app.get '/messages/inbound' do
-      #   eg:/messages/inbound?msisdn=27827255159
-      #   &to=27877460911
-      #   &messageId=0200000057C3CD30
-      #   &text=yK2ba
-      #   &type=text
-      #   &keyword=YK2BA
-      #   &message-timestamp=2015-03-18+10%3A59%3A45
-      #   status 200
-      # end
-
-      app.post '/messages/inbound' do
-        data = JSON.parse(request.body.read)
+      app.get '/messages/inbound' do
+        content_type :json
 
         begin
-          
-          sender_number = data['msisdn'].to_i
-          message_id = data['messageId']
-          short_hash = data['text']
-          timestamp = data['message-timestamp']
+          # eg:/messages/inbound?msisdn=27827255159
+          # &to=27877460911
+          # &messageId=0200000057C3CD30
+          # &text=yK2ba
+          # &type=text
+          # &keyword=YK2BA
+          # &message-timestamp=2015-03-18+10%3A59%3A45
+
+          sender_number = params['msisdn'].to_i
+          message_id = params['messageId']
+          short_hash = params['text']
+          timestamp = params['message-timestamp']
 
           MessageService.new.update sender_number, short_hash, message_id
 
           status 200
         rescue SmsError => e
-          status 500  # this should be 500 but the SMS provider needs a 200
-          e.message.to_json
+          status 200  # this should be 500 but the SMS provider needs a 200
+          puts e.message.to_json
         end
 
       end
