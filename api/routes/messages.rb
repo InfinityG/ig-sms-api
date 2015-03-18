@@ -51,12 +51,12 @@ module Sinatra
           # &keyword=YK2BA
           # &message-timestamp=2015-03-18+10%3A59%3A45
 
-          sender_number = params['msisdn'].to_i
-          message_id = params['messageId']
-          short_hash = params['text']
-          timestamp = params['message-timestamp']
+          sender_number = params[:msisdn].to_i
+          message_id = params[:messageId]
+          short_hash = params[:text]
+          # timestamp = params['message-timestamp']
 
-          result = MessageService.new.update_inbound_message sender_number, short_hash, message_id
+          result = MessageService.new.update_inbound_message short_hash, sender_number, message_id
           puts result
 
           status 200
