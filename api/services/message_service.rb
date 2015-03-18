@@ -5,6 +5,7 @@ require './api/utils/rest_util'
 require './api/models/message'
 require './api/models/webhook'
 require './api/errors/sms_error'
+require './api/constants/error_constants'
 
 class MessageService
   def initialize(message_repository = MessageRepository, hash_service = HashService,

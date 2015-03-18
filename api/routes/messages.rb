@@ -55,7 +55,7 @@ module Sinatra
 
           status 200
         rescue SmsError => e
-          status 500
+          status 200  # this should be 500 but the SMS provider needs a 200
           e.message.to_json
         end
 
