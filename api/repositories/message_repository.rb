@@ -25,8 +25,8 @@ class MessageRepository
     message.save
   end
 
-  def get_message_by_short_hash_and_number(short_hash, number)
-    SmartSms::Models::Message.first(:outgoing_message_short_hash => short_hash, :mobile_number => number)
+  def get_message_by_short_hash(short_hash)
+    SmartSms::Models::Message.first(:outgoing_message_short_hash => short_hash)
   end
 
   def get_all
