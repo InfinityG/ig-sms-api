@@ -39,26 +39,26 @@ module Sinatra
         end
       end
 
-      app.get '/messages/inbound' do
-        status 200
-      end
+      # app.get '/messages/inbound' do
+      #   eg:/messages/inbound?msisdn=27827255159
+      #   &to=27877460911
+      #   &messageId=0200000057C3CD30
+      #   &text=yK2ba
+      #   &type=text
+      #   &keyword=YK2BA
+      #   &message-timestamp=2015-03-18+10%3A59%3A45
+      #   status 200
+      # end
 
       app.post '/messages/inbound' do
         data = JSON.parse(request.body.read)
 
         begin
-          # eg:/messages/inbound?msisdn=27827255159
-          # &to=27877460911
-          # &messageId=0200000057C3CD30
-          # &text=yK2ba
-          # &type=text
-          # &keyword=YK2BA
-          # &message-timestamp=2015-03-18+10%3A59%3A45
-
+          
           sender_number = data['msisdn'].to_i
-          message_id = params['messageId']
-          short_hash = params['text']
-          timestamp = params['message-timestamp']
+          message_id = data['messageId']
+          short_hash = data['text']
+          timestamp = data['message-timestamp']
 
           MessageService.new.update sender_number, short_hash, message_id
 
