@@ -8,7 +8,7 @@ module Sinatra
       #this filter applies to everything except options, challenge and login routes
       app.before do
         if (request.request_method == 'OPTIONS') ||
-            (request.request_method == 'GET' && request.path_info == '/messages') # this is for inbound callbacks from SMS provider
+            (request.request_method == 'GET' && request.path_info == '/messages/inbound') # this is for inbound callbacks from SMS provider
           return
         else
           auth_header = env['HTTP_AUTHORIZATION']
