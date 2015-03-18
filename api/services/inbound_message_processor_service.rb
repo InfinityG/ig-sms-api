@@ -1,5 +1,6 @@
 require './api/services/message_service'
 require './api/utils/rest_util'
+require 'json'
 
 class InboundMessageProcessorService
 
@@ -20,7 +21,7 @@ class InboundMessageProcessorService
             # process webhooks
             uri = item.webhook.uri
             auth_header = item.webhook.auth_header
-            payload = item.webhook.body
+            payload = JSON.parse(item.webhook.body).to_json
             result = rest_util.execute_post uri, auth_header, payload
 
             # update status to 'complete'
