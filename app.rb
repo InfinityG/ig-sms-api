@@ -10,6 +10,7 @@ require './api/routes/cors'
 require './api/routes/auth'
 require './api/routes/messages'
 require './api/services/config_service'
+require './api/services/inbound_message_processor_service'
 
 class ApiApp < Sinatra::Base
 
@@ -29,6 +30,10 @@ class ApiApp < Sinatra::Base
     if config[:mongo_host] != 'localhost'
       MongoMapper.database.authenticate(config[:mongo_db_user], config[:mongo_db_password])
     end
+
+    # Start the queue service for inbound messages from the SMS provider...
+    message_processor_service = InboundMessageProcessorService.new
+    message_processor_service.start
 
   end
 

@@ -6,6 +6,7 @@ module SmartSms
       key :uri, String
       key :auth_header, String
       key :body, String
+      key :status, String
     end
   end
 end

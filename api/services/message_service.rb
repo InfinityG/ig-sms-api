@@ -27,6 +27,10 @@ class MessageService
     @message_repository.get_all
   end
 
+  def get_messages_with_pending_webhooks
+    @message_repository.get_messages_with_pending_webhooks
+  end
+
   def create(data)
     short_hash = @hash_service.generate_short_hash
     reply_number = @config_service.get_config[:sms_gateway_reply_number]
@@ -43,7 +47,7 @@ class MessageService
 
   end
 
-  def update(short_hash, sender_number, message_id)
+  def update_inbound_message(short_hash, sender_number, message_id)
     matched_message = @message_repository.get_message_by_short_hash short_hash
 
     raise SmsError, MESSAGE_NOT_FOUND_ERROR if matched_message == nil
@@ -54,12 +58,18 @@ class MessageService
     matched_message.incoming_message_id = message_id
     @message_repository.update_message matched_message
 
-    # Step 2: execute the callback defined in the webhook
-    uri = matched_message.webhook.uri
-    auth_header = matched_message.webhook.auth_header
-    payload = matched_message.webhook.body
-    @rest_util.execute_post uri, auth_header, payload
+    # NOTE: below will be handled in the InboundMessageProcessorService
+    # # Step 2: execute the callback defined in the webhook
+    # uri = matched_message.webhook.uri
+    # auth_header = matched_message.webhook.auth_header
+    # payload = matched_message.webhook.body
+    # @rest_util.execute_post uri, auth_header, payload
 
+  end
+
+  def update_message_webhook_status(message, status)
+    message.webhook.status = status
+    @message_repository.update_message message
   end
 
   private

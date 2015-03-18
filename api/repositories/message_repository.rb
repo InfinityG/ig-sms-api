@@ -9,8 +9,10 @@ class MessageRepository
     webhook = nil
 
     if webhook_data != nil
-      body = webhook_data[:body].to_json  # the webhook body field on the model expects a string
-      webhook = SmartSms::Models::Webhook.new(:uri => webhook_data[:uri], :auth_header => webhook_data[:auth_header], :body => body)
+      webhook = SmartSms::Models::Webhook.new(:uri => webhook_data[:uri],
+                                              :auth_header => webhook_data[:auth_header],
+                                              :body => webhook_data[:body],
+                                              :status => 'pending')
     end
 
     SmartSms::Models::Message.create(:mobile_number => number,
@@ -31,6 +33,10 @@ class MessageRepository
 
   def get_all
     SmartSms::Models::Message.all
+    end
+
+  def get_messages_with_pending_webhooks
+    SmartSms::Models::Message.where(:webhook.status => 'pending')
   end
 
 end
