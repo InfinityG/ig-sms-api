@@ -57,14 +57,6 @@ class MessageService
     matched_message.incoming_message = short_hash
     matched_message.incoming_message_id = message_id
     @message_repository.update_message matched_message
-
-    # NOTE: below will be handled in the InboundMessageProcessorService
-    # # Step 2: execute the callback defined in the webhook
-    # uri = matched_message.webhook.uri
-    # auth_header = matched_message.webhook.auth_header
-    # payload = matched_message.webhook.body
-    # @rest_util.execute_post uri, auth_header, payload
-
   end
 
   def update_message_webhook_status(message, status)

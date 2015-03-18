@@ -28,7 +28,7 @@ class InboundMessageProcessorService
           end
 
         rescue Exception => e
-          puts "Error processing queue item! || Error: #{e}"
+          puts "Error processing message item! || Error: #{e}"
         end
 
         sleep 10.0

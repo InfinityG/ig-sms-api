@@ -36,7 +36,7 @@ class MessageRepository
     end
 
   def get_messages_with_pending_webhooks
-    SmartSms::Models::Message.where(:webhook.status => 'pending')
+    SmartSms::Models::Message.where('webhook.status' => 'pending')
   end
 
 end
