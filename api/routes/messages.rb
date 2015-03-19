@@ -48,36 +48,15 @@ module Sinatra
       # &keyword=YK2BA
       # &message-timestamp=2015-03-18+10%3A59%3A45
 
-      # app.get '/messages/inbound' do
-      #
-      #   content_type :json
-      #
-      #   begin
-      #     sender_number = params[:msisdn]
-      #     message_id = params[:messageId]
-      #     short_hash = params[:keyword]
-      #     text = params[:text]
-      #
-      #     result = MessageService.new.update_inbound_message short_hash, text, sender_number, message_id
-      #     puts result
-      #
-      #     status 200
-      #   rescue SmsError => e
-      #     status 200 # this should be 500 but the SMS provider needs a 200
-      #     puts e.message.to_json
-      #   end
-      #
-      # end
+      app.get '/messages/inbound' do
 
-      app.post '/messages/inbound' do
-
-        data = JSON.parse(request.body.read, :symbolize_names => true)
+        content_type :json
 
         begin
-          sender_number = data[:msisdn]
-          message_id = data[:messageId]
-          short_hash = data[:keyword]
-          text = data[:text]
+          sender_number = params[:msisdn]
+          message_id = params[:messageId]
+          short_hash = params[:keyword]
+          text = params[:text]
 
           result = MessageService.new.update_inbound_message short_hash, text, sender_number, message_id
           puts result
