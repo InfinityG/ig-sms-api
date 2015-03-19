@@ -50,8 +50,10 @@ module Sinatra
 
       app.get '/messages/inbound' do
 
+        puts
+
         begin
-          sender_number = params[:msisdn].to_i
+          sender_number = params[:msisdn]
           message_id = params[:messageId]
           short_hash = params[:keyword]
           text = params[:text]
