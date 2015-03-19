@@ -11,11 +11,11 @@ class MessageRepository
     if webhook_data != nil
       webhook = SmartSms::Models::Webhook.new(:uri => webhook_data[:uri],
                                               :auth_header => webhook_data[:auth_header],
-                                              :body => webhook_data[:body],
-                                              :status => 'pending')
+                                              :body => webhook_data[:body])
     end
 
     expect_inbound = (webhook == nil) ? false : true
+    webhook_status = expect_inbound ? 'pending' : nil
     inbound_message_status = expect_inbound ? 'pending' : nil
 
     SmartSms::Models::Message.create(:mobile_number => number,
@@ -24,7 +24,8 @@ class MessageRepository
                                      :outbound_message => message,
                                      :outbound_message_status => 'pending',
                                      :inbound_message_status => inbound_message_status,
-                                     :webhook => webhook)
+                                     :webhook => webhook,
+                                     :webhook_status => webhook_status)
 
   end
 
@@ -50,7 +51,7 @@ class MessageRepository
 
   def get_messages_with_pending_webhooks
     # https://gist.github.com/kinopyo/1547098
-    SmartSms::Models::Message.where(:inbound_message_id.ne => nil,
+    SmartSms::Models::Message.where(:inbound_message_status => 'received',
                                     :webhook_status => 'pending').all
   end
 
