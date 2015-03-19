@@ -33,13 +33,13 @@ class MessageRepository
   end
 
   def get_matched_message_by_number_and_short_hash(number, short_hash, status)
-    SmartSms::Models::Message.first(:number => number,
+    SmartSms::Models::Message.first(:mobile_number => number,
                                     :short_hash => short_hash,
                                     :outbound_message_status => status)
   end
 
   def get_incomplete_messages_by_number(number)
-    SmartSms::Models::Message.where(:number => number,
+    SmartSms::Models::Message.where(:mobile_number => number,
                                     :expect_inbound => true,
                                     :inbound_message_status => 'pending').all
   end
