@@ -15,7 +15,7 @@ module Sinatra
         begin
           MessageValidator.new.validate_outbound_message data
         rescue ValidationError => e
-          status 400  # bad request
+          status 400 # bad request
           e.message.to_json
         end
 
@@ -50,7 +50,7 @@ module Sinatra
 
       app.get '/messages/inbound' do
 
-        puts
+        content_type :json
 
         begin
           sender_number = params[:msisdn]
@@ -60,14 +60,12 @@ module Sinatra
 
           puts "Sender number: #{sender_number}; message_id: #{message_id}; short_hash:#{short_hash}; text: #{text}"
 
-          # timestamp = params['message-timestamp']
-
           result = MessageService.new.update_inbound_message short_hash, text, sender_number, message_id
           puts result
 
           status 200
         rescue SmsError => e
-          status 200  # this should be 500 but the SMS provider needs a 200
+          status 200 # this should be 500 but the SMS provider needs a 200
           puts e.message.to_json
         end
 
