@@ -57,6 +57,9 @@ module Sinatra
           message_id = params[:messageId]
           short_hash = params[:keyword]
           text = params[:text]
+
+          puts "Sender number: #{sender_number}; message_id: #{message_id}; short_hash:#{short_hash}; text: #{text}"
+
           # timestamp = params['message-timestamp']
 
           result = MessageService.new.update_inbound_message short_hash, text, sender_number, message_id
