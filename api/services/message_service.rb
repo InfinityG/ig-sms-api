@@ -19,8 +19,44 @@ class MessageService
     @rest_util = rest_util.new
   end
 
-  def find(message_id)
+  def create(data)
+    number = data[:number]
+    short_hash = create_short_hash(number)
 
+    reply_number = @config_service.get_config[:sms_gateway_reply_number]
+
+    message = data[:message] % {SHORT_HASH: short_hash, REPLY_NUMBER: reply_number}
+    webhook = data[:webhook]
+
+    # Step 1: save the message with state set to 'pending'
+    result = @message_repository.save_message(number, message, short_hash, webhook)
+
+    # Step 2: send the message to the external service
+    message_id = send_to_sms_gateway(message, number)
+
+    # Step 3: update the message to 'sent' with message id
+    result[:outbound_message_id] = message_id
+    result[:outbound_message_status] = 'sent'
+    @message_repository.update_message(result)
+
+  end
+
+  def update_inbound_message(short_hash, text, sender_number, inbound_message_id)
+    matched_message = @message_repository.get_matched_message_by_number_and_short_hash sender_number, short_hash, 'sent'
+
+    raise SmsError, MESSAGE_NOT_FOUND_ERROR if matched_message == nil
+    raise SmsError, MESSAGE_ALREADY_HANDLED_ERROR if matched_message.inbound_message_status == 'received'
+
+    # Step 1: update the record with the incoming sms
+    matched_message.inbound_message = text
+    matched_message.inbound_message_id = inbound_message_id
+    matched_message.inbound_message_status = 'received'
+    @message_repository.update_message matched_message
+  end
+
+  def update_message_webhook_status(message, status)
+    message.webhook_status = status
+    @message_repository.update_message message
   end
 
   def get_all
@@ -31,37 +67,18 @@ class MessageService
     @message_repository.get_messages_with_pending_webhooks
   end
 
-  def create(data)
+  private
+  def create_short_hash(number)
+    incomplete_messages_for_number = @message_repository.get_incomplete_messages_by_number number
+
     short_hash = @hash_service.generate_short_hash
-    reply_number = @config_service.get_config[:sms_gateway_reply_number]
 
-    number = data[:number]
-    message = data[:message] % {SHORT_HASH: short_hash, REPLY_NUMBER: reply_number}
-    webhook = data[:webhook]
+    # regenerate the short hash if there is a duplicate for an incomplete message
+    incomplete_messages_for_number.each do |message|
+      short_hash = @hash_service.generate_short_hash if message.short_hash == short_hash
+    end
 
-    # Step 1: send the message to the external service
-    message_id = send_to_sms_gateway(message, number)
-
-    # Step 2: save the message locally
-    @message_repository.save_message(number, message, message_id, short_hash, webhook)
-
-  end
-
-  def update_inbound_message(short_hash, sender_number, message_id)
-    matched_message = @message_repository.get_message_by_short_hash short_hash
-
-    raise SmsError, MESSAGE_NOT_FOUND_ERROR if matched_message == nil
-    raise SmsError, MESSAGE_ALREADY_HANDLED_ERROR if matched_message.incoming_message_id.to_s != ''
-
-    # Step 1: update the record with the incoming sms
-    matched_message.incoming_message = short_hash
-    matched_message.incoming_message_id = message_id
-    @message_repository.update_message matched_message
-  end
-
-  def update_message_webhook_status(message, status)
-    message.webhook.status = status
-    @message_repository.update_message message
+    short_hash
   end
 
   private

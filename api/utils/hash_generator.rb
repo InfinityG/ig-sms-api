@@ -26,6 +26,10 @@ class HashGenerator
     SecureRandom.random_number 1000000
   end
 
+  def generate_random_number_by_length(length)
+    rand((9.to_s * length).to_i).to_s.center(length, rand(9).to_s).to_i
+  end
+
   # this uses a reversible short hash - https://github.com/peterhellberg/hashids.rb
   def generate_short_hash(number)
     hashids = Hashids.new('mysecretsalt')

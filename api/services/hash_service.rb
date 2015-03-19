@@ -6,7 +6,7 @@ class HashService
   end
 
   def generate_short_hash
-    num = @hash_generator.generate_random_number
-    @hash_generator.generate_short_hash num
+    @hash_generator.generate_random_number_by_length 4
+    # @hash_generator.generate_short_hash num
   end
 end

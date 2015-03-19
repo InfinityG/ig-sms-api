@@ -7,16 +7,20 @@ module SmartSms
       # mobile_number + outgoing_message_short_hash
 
       key :mobile_number, String
-      key :outgoing_message, String
-      key :outgoing_message_id, String
-      key :outgoing_message_state, String  # this can be 'pending' or 'sent'
-      key :outgoing_message_short_hash, String  # used to match an incoming message to an outgoing message
+      key :short_hash, String  # used to match an incoming message to an outgoing message
+      key :expect_inbound, Boolean
 
-      key :incoming_message, String
-      key :incoming_message_id, String
+      key :outbound_message, String
+      key :outbound_message_id, String
+      key :outbound_message_status, String  # this can be 'pending' or 'sent'
+
+      key :inbound_message, String
+      key :inbound_message_id, String
+      key :inbound_message_status, String # this can be 'pending' or 'received'
 
       # webhook for associated incoming message (applicable to 2-way only)
       one :webhook, :class_name => 'SmartSms::Models::Webhook'
+      key :webhook_status, String
     end
   end
 end

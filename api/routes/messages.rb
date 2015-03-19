@@ -39,24 +39,25 @@ module Sinatra
         end
       end
 
+      # SAMPLE INBOUND MESSAGE FROM NEXMO:
+      # eg:/messages/inbound?msisdn=27827255159
+      # &to=27877460911
+      # &messageId=0200000057C3CD30
+      # &text=yK2ba
+      # &type=text
+      # &keyword=YK2BA
+      # &message-timestamp=2015-03-18+10%3A59%3A45
+
       app.get '/messages/inbound' do
-        content_type :json
 
         begin
-          # eg:/messages/inbound?msisdn=27827255159
-          # &to=27877460911
-          # &messageId=0200000057C3CD30
-          # &text=yK2ba
-          # &type=text
-          # &keyword=YK2BA
-          # &message-timestamp=2015-03-18+10%3A59%3A45
-
           sender_number = params[:msisdn].to_i
           message_id = params[:messageId]
-          short_hash = params[:text]
+          short_hash = params[:keyword]
+          text = params[:text]
           # timestamp = params['message-timestamp']
 
-          result = MessageService.new.update_inbound_message short_hash, sender_number, message_id
+          result = MessageService.new.update_inbound_message short_hash, text, sender_number, message_id
           puts result
 
           status 200
