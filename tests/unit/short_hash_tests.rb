@@ -1,6 +1,7 @@
 require 'minitest'
 require 'minitest/autorun'
 require 'base64'
+require 'json'
 
 require_relative '../../api/utils/hash_generator'
 
