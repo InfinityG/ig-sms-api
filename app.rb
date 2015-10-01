@@ -23,13 +23,14 @@ class ApiApp < Sinatra::Base
     register Sinatra::AuthRoutes
     register Sinatra::MessageRoutes
 
-    # Configure MongoMapper
-    MongoMapper.connection = Mongo::MongoClient.new(config[:mongo_host], config[:mongo_port])
-    MongoMapper.database = config[:mongo_db]
-
-    if config[:mongo_host] != 'localhost'
-      MongoMapper.database.authenticate(config[:mongo_db_user], config[:mongo_db_password])
+    if config[:mongo_replicated] == 'true'
+      MongoMapper.connection = Mongo::MongoReplicaSetClient.new([config[:mongo_host_1], config[:mongo_host_2], config[:mongo_host_3]])
+    else
+      conn_pair = config[:mongo_host_1].split(':')
+      MongoMapper.connection = Mongo::MongoClient.new(conn_pair[0], conn_pair[1])
     end
+
+    MongoMapper.database = config[:mongo_db]
 
     # Start the queue service for inbound messages from the SMS provider...
     message_processor_service = InboundMessageProcessorService.new

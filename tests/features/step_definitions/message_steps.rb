@@ -4,7 +4,7 @@ require 'json'
 require 'minitest'
 
 Given(/^a mobile number$/) do
-  @mobile_number = '+27827255159'
+  @mobile_number = '+27606428672'
 end
 
 And(/^no embedded short hash$/) do
